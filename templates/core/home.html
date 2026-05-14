@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+<section class="hero card" style="background: var(--gradient); color: white; padding: 60px 40px; margin-bottom: 40px; text-align: center;">
+    <h1 style="font-size: 2.5rem; margin-bottom: 15px;">Добро пожаловать в LitFlow</h1>
+    <p style="font-size: 1.2rem; opacity: 0.95; max-width: 600px; margin: 0 auto 25px;">
+        Откройте для себя мир книг с нашими умными рекомендациями и удобным интерфейсом
+    </p>
+    <a href="{% url 'core:catalog' %}" class="btn btn-primary" style="padding: 12px 30px; font-size: 1.1rem;">Перейти в каталог</a>
+</section>
+
+<h2 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+    <i class="fas fa-fire" style="color: var(--accent);"></i> Популярное сейчас
+</h2>
+<div class="grid-4">
+    {% for book in books %}
+    <div class="card book-card">
+        <div class="card-img-wrapper">
+            {% if book.image %}
+            <img src="{{ book.image.url }}" alt="{{ book.title }}">
+            {% else %}
+            <div style="height:100%; background: var(--surface-light); display:flex; align-items:center; justify-content:center; color: var(--text-muted);">
+                <i class="fas fa-book" style="font-size: 3rem;"></i>
+            </div>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            <div class="card-category">{{ book.category.name }}</div>
+            <div class="card-title">{{ book.title }}</div>
+            <div class="card-author">{{ book.author }}</div>
+            <div class="card-footer">
+                <span class="price">{{ book.price }} ₽</span>
+                <form action="{% url 'core:cart_add' book.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-add-cart"><i class="fas fa-plus"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px;">
+        Книги пока не добавлены. Зайдите в <a href="/admin" style="color: var(--primary);">админку</a>, чтобы добавить их.
+    </p>
+    {% endfor %}
+</div>
+{% endblock %}

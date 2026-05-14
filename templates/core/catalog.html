@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Каталог книг{% endblock %}
+{% block content %}
+<div class="container" style="margin-top: 40px;">
+    <h1 style="margin-bottom: 30px; text-align: center;">Каталог книг LitFlow</h1>
+    
+    <div class="filters" style="margin-bottom: 30px; display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px;">
+        <a href="{% url 'core:catalog' %}" class="btn {% if not request.GET.category %}btn-primary{% else %}btn-secondary{% endif %}" 
+           style="background: var(--surface); border: 1px solid var(--border); white-space: nowrap;">Все</a>
+        {% for c in categories %}
+        <a href="?category={{ c.slug }}" class="btn {% if request.GET.category == c.slug %}btn-primary{% else %}btn-secondary{% endif %}" 
+           style="background: var(--surface); border: 1px solid var(--border); white-space: nowrap;">{{ c.name }}</a>
+        {% endfor %}
+    </div>
+
+    <div class="grid-4">
+        {% for book in books %}
+        <div class="card book-card">
+            <div class="card-img-wrapper">
+                {% if book.image %}
+                <img src="{{ book.image.url }}" alt="{{ book.title }}">
+                {% else %}
+                <div style="height:100%; background: var(--surface-light); display:flex; align-items:center; justify-content:center; color: var(--text-muted);">
+                    <i class="fas fa-book" style="font-size: 3rem;"></i>
+                </div>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <div class="card-category">{{ book.category.name }}</div>
+                <div class="card-title">{{ book.title }}</div>
+                <div class="card-author">{{ book.author }}</div>
+                <div class="card-footer">
+                    <span class="price">{{ book.price }} ₽</span>
+                    <form action="{% url 'core:cart_add' book.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-add-cart"><i class="fas fa-plus"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px;">
+            В этой категории пока нет книг.
+        </p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

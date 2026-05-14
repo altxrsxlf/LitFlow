@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Заказ оформлен{% endblock %}
+{% block content %}
+<div class="container" style="margin-top: 100px; text-align: center;">
+    <div class="card" style="max-width: 500px; margin: 0 auto; padding: 40px;">
+        <i class="fas fa-check-circle" style="font-size: 5rem; color: var(--accent); margin-bottom: 20px;"></i>
+        <h1 style="margin-bottom: 10px;">Спасибо за заказ!</h1>
+        <p style="color: var(--text-muted); margin-bottom: 30px;">
+            Ваш заказ №{{ order.id }} успешно оформлен. Мы свяжемся с вами по email для подтверждения.
+        </p>
+        <a href="{% url 'core:home' %}" class="btn btn-primary">Вернуться на главную</a>
+    </div>
+</div>
+{% endblock %}
